@@ -1,0 +1,41 @@
+{
+  "name": "ElectronTest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "scripts": {
+    "build": "webpack --progress --profile --colors --display-error-details --display-cached",
+    "postinstall": "typings install",
+    "start": "electron .",
+    "package": "electron-packager . Windowsapp --platform=win32 --arch=all"
+  },
+  "author": "AndersMollmark",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^2.2.0",
+    "electron-packager": "^8.4.0",
+    "electron": "^1.4.1",
+    "es6-shim": "^0.34.0",
+    "ts-loader": "^0.7.2",
+    "typescript": "^2.1.4",
+    "typings": "^1.3.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
+  },
+  "dependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/compiler": "~2.4.0",
+    "@angular/core": "~2.4.0",
+    "@angular/forms": "~2.4.0",
+    "@angular/http": "~2.4.0",
+    "@angular/platform-browser": "~2.4.0",
+    "@angular/platform-browser-dynamic": "~2.4.0",
+    "@angular/router": "~3.4.0",
+    "angular-in-memory-web-api": "~0.2.2",
+    "core-js": "^2.4.1",
+    "reflect-metadata": "^0.1.8",
+    "rxjs": "5.0.1",
+    "systemjs": "0.19.40",
+    "zone.js": "^0.7.4"
+  }
+}

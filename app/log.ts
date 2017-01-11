@@ -4,8 +4,10 @@ export class UtlsLog{
     name: string;
     category: string;
     label: string;
-    tab: string;
-    host: string;
     userTransactionKeyId: string;
     timestamp: number;
+    timestampAsDate: string;
+    tab: string;
+    host: string;
+
 }

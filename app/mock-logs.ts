@@ -11,6 +11,18 @@ export const LOGS: UtlsLog[] = [
         tab: 'tab',
         host: 'host',
         userTransactionKeyId: '123445',
-        timestamp: testDate.getTime()
+        timestamp: testDate.getTime(),
+        timestampAsDate: 'iljj'
+    },
+    {
+        id: '2',
+        name: 'test2',
+        category: 'test',
+        label: 'label',
+        tab: 'tab',
+        host: 'host',
+        userTransactionKeyId: '123445',
+        timestamp: testDate.getTime(),
+        timestampAsDate: 'iljj'
     }
 ];

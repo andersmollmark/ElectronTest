@@ -1,0 +1,7 @@
+
+<h1>Utls-logs</h1>
+<ul>
+    <li *ngFor="let log of utlsFileService.logs | async">
+        <span class="badge">{{log.id}}</span> {{log.name}}
+    </li>
+</ul>

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "webpack --progress --profile --colors --display-error-details --display-cached",
     "postinstall": "typings install",
-    "start": "electron .",
+    "start": "electron main.ts",
     "package": "electron-packager . Windowsapp --platform=win32 --arch=all"
   },
   "author": "AndersMollmark",

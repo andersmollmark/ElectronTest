@@ -1,26 +1,33 @@
-
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UtlsFileService} from "./utls-file.service";
 import {remote, ipcRenderer} from 'electron';
 import {UtlsLog} from "./log";
 import {Subscription} from "rxjs/Subscription";
 import {List} from "immutable";
 import {Observable} from "rxjs/Observable";
+
 let {dialog} = remote;
 
 
 @Component({
     selector: 'my-app',
-    templateUrl: './app/app.component.html'
+    template: `
+    <h1>Utls-logs</h1>
+<ul>
+    <li *ngFor="let log of logs$ | async">
+        <span class="badge">{{log.id}}</span> {{log.name}}
+    </li>
+</ul>
+
+`,
+    // templateUrl: './app/app.component.html'
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
     text: string;
-    // logs$: Observable<List<UtlsLog>>;
-    subscription: Subscription;
+    logs$: Observable<UtlsLog[]>;
 
-    constructor(private utlsFileService: UtlsFileService){
-        // this.logs$ = utlsFileService.logs;
+    constructor(private utlsFileService: UtlsFileService) {
     }
 
     ngOnInit(): void {
@@ -31,28 +38,26 @@ export class AppComponent implements OnInit{
                 {
                     label: 'open',
                     click: function () {
-                        dialog.showOpenDialog(function (fileNamesArr: Array<any>) {
-                            if(!fileNamesArr){
-                                console.log("No file selected");
-                            }
-                            else{
-                                self.utlsFileService.createLogs(fileNamesArr[0]);
-                            }
-                        });
+                        dialog.showOpenDialog(self.handleFile);
                     }
                 }
             ]
         }]);
         remote.Menu.setApplicationMenu(menu);
 
-        // this.subscription = this.utlsFileService.logs.subscribe(logs => this.logs$ = logs);
-
-        // this.utlsFileService.createLogs('C:/Users/delaval/Downloads/dump.json');
-
     }
 
-    ngOnDestroy(){
-        // this.subscription.unsubscribe();
+    public handleFile = (fileNamesArr: Array<any>) => {
+        if (!fileNamesArr) {
+            console.log("No file selected");
+        }
+        else {
+            console.log("filename selected:" + fileNamesArr[0]);
+            this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
+        }
+    }
+
+    ngOnDestroy() {
     }
 
 }

@@ -1,5 +1,5 @@
-
 <h1>Utls-logs</h1>
+<div hidden>{{clock | async}}</div>
 <ul>
     <li *ngFor="let log of logs$ | async">
         <span class="badge">{{log.id}}</span> {{log.name}}

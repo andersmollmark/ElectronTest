@@ -14,6 +14,18 @@ export class UtlsFileService {
     constructor(private http: Http) {
     }
 
+    getLogs(): Observable<UtlsLog[]> {
+        return Observable.of([
+            {
+                id: '1',
+                name: 'test'
+            },
+            {
+                id: '2',
+                name: 'test2'
+            }]);
+    }
+
     createLogs(filename: string): Observable<UtlsLog[]> {
         return this.http.get(filename).map(res => res.json())
             .catch(error => Observable.throw(error.json().error || 'Server error'));

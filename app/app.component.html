@@ -1,7 +1,64 @@
 <h1>Utls-logs</h1>
 <div hidden>{{clock | async}}</div>
-<ul>
-    <li *ngFor="let log of logs$ | async">
-        <span class="badge">{{log.id}}</span> {{log.name}}
-    </li>
-</ul>
+
+<table class="table table-striped" [mfData]="logs$ | async" #mf="mfDataTable" [mfRowsOnPage]="5">
+    <thead>
+    <tr>
+        <th style="width: 20%">
+            <mfDefaultSorter by="id">id</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="userTransactionKeyId">Transaction-id</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="timestampAsDate">Time for log</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="tab">Active tab</mfDefaultSorter>
+        </th>
+        <th style="width: 20%">
+            <mfDefaultSorter by="host">Robot</mfDefaultSorter>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let log of mf.data">
+        <td>{{log.id}}</td>
+        <td>{{log.userTransactionKeyId}}</td>
+        <td>{{log.timestampAsDate}}</td>
+        <td>{{log.tab}}</td>
+        <td>{{log.host}}</td>
+    </tr>
+    </tbody>
+
+</table>
+
+
+<!--<table class="table table-striped">-->
+    <!--<thead>-->
+    <!--<tr>-->
+        <!--<th style="width: 50%">id</th>-->
+        <!--<th style="width: 50%">Name-->
+        <!--</th>-->
+    <!--</tr>-->
+    <!--</thead>-->
+    <!--<tbody>-->
+    <!--<tr *ngFor="let log of data | async">-->
+        <!--<td>{{log.id}}</td>-->
+        <!--<td>{{log.name}}</td>-->
+    <!--</tr>-->
+    <!--</tbody>-->
+
+<!--</table>-->
+
+<!--<ul>-->
+    <!--<li *ngFor="let log of data | async">-->
+        <!--<span class="badge">{{log.id}}</span> {{log.name}}-->
+    <!--</li>-->
+<!--</ul>-->
+
+<!--<ul>-->
+    <!--<li *ngFor="let log of logs$ | async">-->
+        <!--<span class="badge">{{log.id}}</span> {{log.name}}-->
+    <!--</li>-->
+<!--</ul>-->

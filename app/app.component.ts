@@ -23,8 +23,10 @@ let {dialog} = remote;
 })
 export class AppComponent implements OnInit {
 
+    items;
     text: string;
     logs$: Observable<UtlsLog[]>;
+    kalle;
     clock;
     constructor(private utlsFileService: UtlsFileService) {
     }
@@ -55,8 +57,16 @@ export class AppComponent implements OnInit {
         else {
             // console.log("filename selected:" + fileNamesArr[0]);
             this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
-            // this.logs$ = this.utlsFileService.getLogs();
+            // this.kalle = this.utlsFileService.getLogs();
         }
+    }
+
+    createRange(number){
+        this.items = [];
+        for(var i=1; i<=number; i++){
+            this.items.push(i);
+        }
+        return this.items;
     }
 
     ngOnDestroy() {

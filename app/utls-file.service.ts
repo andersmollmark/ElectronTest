@@ -15,15 +15,30 @@ export class UtlsFileService {
     }
 
     getLogs(): Observable<UtlsLog[]> {
+        let testDate = new Date();
         return Observable.of([
             {
-                id: '1',
-                name: 'test'
-            },
-            {
-                id: '2',
-                name: 'test2'
-            }]);
+                    id: '1',
+                    name: 'test',
+                    category: 'test',
+                    label: 'label',
+                    tab: 'tab',
+                    host: 'host',
+                    userTransactionKeyId: '123445',
+                    timestamp: testDate.getTime(),
+                    timestampAsDate: 'iljj'
+                },
+                {
+                    id: '2',
+                    name: 'test2',
+                    category: 'test',
+                    label: 'label',
+                    tab: 'tab',
+                    host: 'host',
+                    userTransactionKeyId: '123445',
+                    timestamp: testDate.getTime(),
+                    timestampAsDate: 'iljj'
+                }]);
     }
 
     createLogs(filename: string): Observable<UtlsLog[]> {

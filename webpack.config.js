@@ -36,13 +36,19 @@ module.exports = {
         test: /\.ts$/,
         loader: 'ts',
         exclude: [ /node_modules/ ]
+      },
+      {
+        test: /\.css/,
+        loaders: ['style', 'css'],
+        include: [ path.resolve(__dirname, "/app"),
+          path.resolve(__dirname, "/node_modules/bootstrap")]
       }
     ]
   },
 
   plugins: [
     new CommonsChunkPlugin({ name: 'angular2', filename: 'angular2.js', minChunks: Infinity }),
-    new CommonsChunkPlugin({ name: 'common',   filename: 'common.js' })
+    new CommonsChunkPlugin({ name: 'com mon',   filename: 'common.js' })
   ],
   target: 'electron-renderer'
 };

@@ -1,9 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit} from "@angular/core";
 import {UtlsFileService} from "./utls-file.service";
-import {remote, ipcRenderer} from 'electron';
+import {remote, ipcRenderer} from "electron";
 import {UtlsLog} from "./log";
-import {Subscription} from "rxjs/Subscription";
-import {List} from "immutable";
 import {Observable} from "rxjs/Observable";
 
 let {dialog} = remote;
@@ -11,24 +9,26 @@ let {dialog} = remote;
 
 @Component({
     selector: 'my-app',
-//     template: `
-//     <h1>Utls-logs {{clock | async}}</h1>
-// <ul>
-//     <li *ngFor="let log of logs$ | async">
-//         <span class="badge">{{log.id}}</span> {{log.name}}
-//     </li>
-// </ul>
-// `,
     templateUrl: './app/app.component.html'
 })
 export class AppComponent implements OnInit {
 
     items;
+    allUsers = "All users";
+    selectUserDefaultChoice = "--- Select user ---";
     text: string;
     logs$: Observable<UtlsLog[]>;
-    kalle;
+    users$: Observable<String[]>;
+    public filterQuery = "";
     clock;
+    public isLoaded: boolean;
+    public sortBy = "timestampAsDate";
+    public sortOrder = "asc";
+    public selectedUser = this.selectUserDefaultChoice;
+
+
     constructor(private utlsFileService: UtlsFileService) {
+        this.isLoaded = false;
     }
 
     ngOnInit(): void {
@@ -55,11 +55,23 @@ export class AppComponent implements OnInit {
             console.log("No file selected");
         }
         else {
-            // console.log("filename selected:" + fileNamesArr[0]);
+            console.log("filename selected:" + fileNamesArr[0]);
             this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
-            // this.kalle = this.utlsFileService.getLogs();
+            this.isLoaded = true;
+            this.users$ = this.utlsFileService.getUsers();
         }
     }
+
+    changeUser(newUser){
+        if(this.allUsers !== newUser && this.selectUserDefaultChoice !== newUser){
+            this.logs$ = this.utlsFileService.getWithSpecificUser(newUser);
+        }
+        if(this.allUsers === newUser){
+            this.logs$ = this.utlsFileService.getAllLogs();
+        }
+        alert("hi " + newUser);
+    }
+
 
     createRange(number){
         this.items = [];

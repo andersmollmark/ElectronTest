@@ -1,49 +1,49 @@
-import {Injectable} from '@angular/core';
-import * as _ from "lodash";
-import * as FileSystem  from 'fs';
-import {LOGS} from './mock-logs';
+import {Injectable} from "@angular/core";
 import {UtlsLog} from "./log";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
-import {List} from 'immutable';
 import {Http} from "@angular/http";
 
 @Injectable()
 export class UtlsFileService {
 
+    activeLogContent: Observable<UtlsLog[]>;
+    partOfLogContent: Observable<UtlsLog[]>;
+    usersInLogContent: Observable<String[]>;
+
     constructor(private http: Http) {
     }
 
-    getLogs(): Observable<UtlsLog[]> {
-        let testDate = new Date();
-        return Observable.of([
-            {
-                    id: '1',
-                    name: 'test',
-                    category: 'test',
-                    label: 'label',
-                    tab: 'tab',
-                    host: 'host',
-                    userTransactionKeyId: '123445',
-                    timestamp: testDate.getTime(),
-                    timestampAsDate: 'iljj'
-                },
-                {
-                    id: '2',
-                    name: 'test2',
-                    category: 'test',
-                    label: 'label',
-                    tab: 'tab',
-                    host: 'host',
-                    userTransactionKeyId: '123445',
-                    timestamp: testDate.getTime(),
-                    timestampAsDate: 'iljj'
-                }]);
+    createLogs(filename: string): Observable<UtlsLog[]> {
+        this.activeLogContent =
+            this.http.get(filename).map(res => res.json())
+            .catch(error => Observable.throw(error.json().error || 'Server error'));
+        return this.activeLogContent;
     }
 
-    createLogs(filename: string): Observable<UtlsLog[]> {
-        return this.http.get(filename).map(res => res.json())
-            .catch(error => Observable.throw(error.json().error || 'Server error'));
+    getWithSpecificUser(username: string): Observable<UtlsLog[]>{
+        this.partOfLogContent =
+            this.activeLogContent.map(logs => logs.filter(log => log.username === username));
+        return this.partOfLogContent;
+
+    }
+
+    getUsers(): Observable<String[]>{
+        let temp = [];
+        this.usersInLogContent =
+            this.activeLogContent.map(logs => logs.filter(log => {
+                if(temp.indexOf(log.username) === -1){
+                    temp.push(log.username);
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }).map(uniqueLog => uniqueLog.username));
+        return this.usersInLogContent;
+    }
+
+    getAllLogs(): Observable<UtlsLog[]> {
+        return this.activeLogContent;
     }
 
 

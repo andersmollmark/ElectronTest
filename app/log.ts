@@ -1,6 +1,7 @@
 
 export class UtlsLog{
     id: string;
+    username: string;
     name: string;
     category: string;
     label: string;
@@ -9,5 +10,6 @@ export class UtlsLog{
     timestampAsDate: string;
     tab: string;
     host: string;
+    target: string;
 
 }

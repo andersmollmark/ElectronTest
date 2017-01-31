@@ -1,0 +1,28 @@
+[
+	{
+		"id": "anders.mollmarkext@delaval.com1477556678990",
+        "username": "anders.mollmarkext@delaval.com",
+		"name": "select.tab",
+		"category": "tab-select",
+		"label": "Change tab to:/tab/farm",
+		"userTransactionKeyId": "anders.mollmarkext@delaval.com10.34.34.58tab",
+		"timestamp": 1477556678990,
+		"timestampAsDate": "Oct 27, 2016 10:24:38 AM",
+		"tab": "farm",
+		"host": "10.34.35.65",
+        "target": "mob"
+	},
+	{
+		"id": "anders.mollmarkext@delaval.com1477556682383",
+        "username": "anders.mollmarkext@delaval.com",
+		"name": "select.tab",
+		"category": "tab-select",
+		"label": "Change tab to:/tab/stall",
+		"userTransactionKeyId": "anders.mollmarkext@delaval.com10.34.34.58tab",
+		"timestamp": 1477556682383,
+		"timestampAsDate": "Oct 27, 2016 10:24:42 AM",
+		"tab": "farm",
+		"host": "10.34.35.65",
+        "target": "mob"
+	}
+]

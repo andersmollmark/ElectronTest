@@ -1,5 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {UtlsFileService} from "./utls-file.service";
+import {JsonDumpService} from "./jsonDump.service";
 import {remote, ipcRenderer} from "electron";
 import {UtlsLog} from "./log";
 import {Observable} from "rxjs/Observable";
@@ -14,18 +15,25 @@ let {dialog} = remote;
 export class AppComponent implements OnInit {
 
     items;
-    allUsers = "All users";
-    selectUserDefaultChoice = "--- Select user ---";
     text: string;
     logs$: Observable<UtlsLog[]>;
-    users$: Observable<String[]>;
     public filterQuery = "";
     clock;
     public isLoaded: boolean;
     public sortBy = "timestampAsDate";
     public sortOrder = "asc";
-    public selectedUser = this.selectUserDefaultChoice;
 
+    // Select-user-filter
+    selectUserDefaultChoice = "--- Select user ---";
+    public selectedUser = this.selectUserDefaultChoice;
+    allUsers = "All users";
+    users$: Observable<String[]>;
+
+    //Select-category-filter
+    selectCategoryDefaultChoice = "--- Select category ---";
+    public selectedCategory = this.selectCategoryDefaultChoice;
+    allCategories = "All categories";
+    categories$: Observable<String[]>;
 
     constructor(private utlsFileService: UtlsFileService) {
         this.isLoaded = false;
@@ -59,6 +67,7 @@ export class AppComponent implements OnInit {
             this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
             this.isLoaded = true;
             this.users$ = this.utlsFileService.getUsers();
+            this.categories$ = this.utlsFileService.getCategories();
         }
     }
 
@@ -69,17 +78,19 @@ export class AppComponent implements OnInit {
         if(this.allUsers === newUser){
             this.logs$ = this.utlsFileService.getAllLogs();
         }
-        alert("hi " + newUser);
     }
 
-
-    createRange(number){
-        this.items = [];
-        for(var i=1; i<=number; i++){
-            this.items.push(i);
+    changeCategory(newCategory){
+        if(this.allCategories !== newCategory && this.selectCategoryDefaultChoice !== newCategory){
+            this.logs$ = this.utlsFileService.getWithSpecificCategory(newCategory);
         }
-        return this.items;
+        if(this.allCategories === newCategory){
+            this.logs$ = this.utlsFileService.getAllLogs();
+        }
+        alert("hi " + newCategory);
     }
+
+
 
     ngOnDestroy() {
     }

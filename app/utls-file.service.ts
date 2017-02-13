@@ -9,6 +9,7 @@ export class UtlsFileService {
     activeLogContent: Observable<UtlsLog[]>;
     partOfLogContent: Observable<UtlsLog[]>;
     usersInLogContent: Observable<String[]>;
+    categoriesInLogContent: Observable<String[]>;
 
     constructor(private http: Http) {
     }
@@ -40,6 +41,28 @@ export class UtlsFileService {
                 }
             }).map(uniqueLog => uniqueLog.username));
         return this.usersInLogContent;
+    }
+
+    getCategories(): Observable<String[]>{
+        let temp = [];
+        this.categoriesInLogContent =
+            this.activeLogContent.map(logs => logs.filter(log => {
+                if(temp.indexOf(log.category) === -1){
+                    temp.push(log.category);
+                    return true;
+                }
+                else{
+                    return false;
+                }
+            }).map(uniqueLog => uniqueLog.category));
+        return this.categoriesInLogContent;
+    }
+
+    getWithSpecificCategory(category: string): Observable<UtlsLog[]>{
+        this.partOfLogContent =
+            this.activeLogContent.map(logs => logs.filter(log => log.category === category));
+        return this.partOfLogContent;
+
     }
 
     getAllLogs(): Observable<UtlsLog[]> {

@@ -2,18 +2,36 @@
     <div class="utls-header-text">
         <h1 class="utls-text">User transaction-logs</h1>
     </div>
-    <div class="utls-selector-text utls-text">
-        Username:
+
+    <div class="utls-logfilter-column">
+        <div class="utls-selector-text utls-text">
+            Username:
+        </div>
+
+        <select class="form-control utls-select"
+                [(ngModel)]="selectedUser"
+                (ngModelChange)="changeUser($event)"
+                *ngIf="isLoaded">
+            <option>--- Select user ---</option>
+            <option>All users</option>
+            <option *ngFor="let u of users$ | async" [ngValue]="u">{{u}}</option>
+        </select>
     </div>
 
-    <select class="form-control utls-select"
-            [(ngModel)]="selectedUser"
-            (ngModelChange)="changeUser($event)"
-            *ngIf="isLoaded">
-        <option>--- Select user ---</option>
-        <option>All users</option>
-        <option *ngFor="let u of users$ | async" [ngValue]="u">{{u}}</option>
-    </select>
+    <div class="utls-logfilter-column">
+        <div class="utls-selector-text utls-text">
+            Category:
+        </div>
+
+        <select class="form-control utls-select"
+                [(ngModel)]="selectedCategory"
+                (ngModelChange)="changeCategory($event)"
+                *ngIf="isLoaded">
+            <option>--- Select category ---</option>
+            <option>All categories</option>
+            <option *ngFor="let c of categories$ | async | stringSort" [ngValue]="c">{{c}}</option>
+        </select>
+    </div>
 </div>
 
 <div hidden>{{clock | async}}</div>
@@ -31,7 +49,7 @@
             <th class="utls-column">
                 <mfDefaultSorter by="username">Username</mfDefaultSorter>
             </th>
-            <th class="utls-column">
+            <th class="utls-column-small">
                 <mfDefaultSorter by="timestampAsDate">Time for log</mfDefaultSorter>
             </th>
             <th class="utls-column-xsmall">
@@ -41,6 +59,9 @@
                 <mfDefaultSorter by="target">Using device</mfDefaultSorter>
             </th>
             <th class="utls-column-small">
+                <mfDefaultSorter by="target">Category</mfDefaultSorter>
+            </th>
+            <th class="utls-column-xsmall">
                 <mfDefaultSorter by="host">Robot</mfDefaultSorter>
             </th>
             <th class="utls-column-big">
@@ -54,6 +75,7 @@
             <td>{{log.timestampAsDate}}</td>
             <td>{{log.tab}}</td>
             <td>{{log.target}}</td>
+            <td>{{log.category}}</td>
             <td>{{log.host}}</td>
             <td>{{log.label}}</td>
         </tr>

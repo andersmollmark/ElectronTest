@@ -75,5 +75,10 @@
 
 .utls-selector-row{
     padding-bottom: 15px;
-    padding-top: 15px;
+    /*padding-top: 15px;*/
+}
+
+.utls-logfilter-column{
+    float: left;
+    padding-bottom: 10px;
 }

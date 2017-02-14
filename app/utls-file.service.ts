@@ -2,14 +2,26 @@ import {Injectable} from "@angular/core";
 import {UtlsLog} from "./log";
 import {Observable} from "rxjs/Observable";
 import {Http} from "@angular/http";
+import {Dto} from "./dto";
+import * as _ from "lodash";
 
 @Injectable()
 export class UtlsFileService {
 
     activeLogContent: Observable<UtlsLog[]>;
     partOfLogContent: Observable<UtlsLog[]>;
-    usersInLogContent: Observable<String[]>;
-    categoriesInLogContent: Observable<String[]>;
+
+    usersInLogContent: Dto[] = [];
+    categoriesInLogContent: Dto[] = [];
+    tabsInLogContent: Dto[] = [];
+    eventNamesInLogContent: Dto[] = [];
+
+    public static USERNAME = "username";
+    public static TAB = "tab";
+    public static CATEGORY = "category";
+    public static EVENTNAME = "name";
+
+    allColumnContent = [];
 
     constructor(private http: Http) {
     }
@@ -17,50 +29,63 @@ export class UtlsFileService {
     createLogs(filename: string): Observable<UtlsLog[]> {
         this.activeLogContent =
             this.http.get(filename).map(res => res.json())
-            .catch(error => Observable.throw(error.json().error || 'Server error'));
+                .catch(error => Observable.throw(error.json ? error.json().error : alert("Error when reading file:" + filename + "," + error) || 'Server error'));
+
+        this.activeLogContent.subscribe(
+            logs => this.mapLogToContentAndColumn(logs),
+            error => console.log("something went wrong when mapping logs to columns"),
+            () => console.log("done with mapping")
+        );
+
         return this.activeLogContent;
     }
 
-    getWithSpecificUser(username: string): Observable<UtlsLog[]>{
-        this.partOfLogContent =
-            this.activeLogContent.map(logs => logs.filter(log => log.username === username));
-        return this.partOfLogContent;
+    mapLogToContentAndColumn(logs: UtlsLog[]){
+        let tempUser = [];
+        let tempTab = [];
+        let tempCategory = [];
+        let tempName = [];
+        let self = this;
+        _.forEach(logs, function (log) {
+            if(tempUser.indexOf(log.username) === -1){
+                tempUser.push(log.username);
+                self.usersInLogContent.push({name: UtlsFileService.USERNAME, value:log.username});
+            }
+            if(tempTab.indexOf(log.tab) === -1){
+                tempTab.push(log.tab);
+                self.tabsInLogContent.push({name: UtlsFileService.TAB, value:log.tab});
+            }
+            if(tempCategory.indexOf(log.category) === -1){
+                tempCategory.push(log.category);
+                self.categoriesInLogContent.push({name: UtlsFileService.CATEGORY, value:log.category});
+            }
+            if(tempName.indexOf(log.name) === -1){
+                tempName.push(log.name);
+                self.eventNamesInLogContent.push({name: UtlsFileService.EVENTNAME, value:log.name});
+            }
+        });
+
+        this.allColumnContent[UtlsFileService.USERNAME] = this.usersInLogContent;
+        this.allColumnContent[UtlsFileService.TAB] = this.tabsInLogContent;
+        this.allColumnContent[UtlsFileService.CATEGORY] = this.categoriesInLogContent;
+        this.allColumnContent[UtlsFileService.EVENTNAME] = this.eventNamesInLogContent;
+    }
+
+
+    getContentForSpecificColumn(column: Dto): Dto[]{
+        return this.allColumnContent[column.value];
 
     }
 
-    getUsers(): Observable<String[]>{
-        let temp = [];
-        this.usersInLogContent =
+    getLogsForSpecificColumnValue(content: Dto): Observable<UtlsLog[]>{
+        this.partOfLogContent =
             this.activeLogContent.map(logs => logs.filter(log => {
-                if(temp.indexOf(log.username) === -1){
-                    temp.push(log.username);
+                // console.log('value:' + log[content.name]);
+                if(log[content.name] === content.value){
                     return true;
                 }
-                else{
-                    return false;
-                }
-            }).map(uniqueLog => uniqueLog.username));
-        return this.usersInLogContent;
-    }
-
-    getCategories(): Observable<String[]>{
-        let temp = [];
-        this.categoriesInLogContent =
-            this.activeLogContent.map(logs => logs.filter(log => {
-                if(temp.indexOf(log.category) === -1){
-                    temp.push(log.category);
-                    return true;
-                }
-                else{
-                    return false;
-                }
-            }).map(uniqueLog => uniqueLog.category));
-        return this.categoriesInLogContent;
-    }
-
-    getWithSpecificCategory(category: string): Observable<UtlsLog[]>{
-        this.partOfLogContent =
-            this.activeLogContent.map(logs => logs.filter(log => log.category === category));
+                return false;
+            }));
         return this.partOfLogContent;
 
     }

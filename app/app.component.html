@@ -3,35 +3,41 @@
         <h1 class="utls-text">User transaction-logs</h1>
     </div>
 
+
     <div class="utls-logfilter-column">
         <div class="utls-selector-text utls-text">
-            Username:
+            Filter on column:
         </div>
 
         <select class="form-control utls-select"
-                [(ngModel)]="selectedUser"
-                (ngModelChange)="changeUser($event)"
+                [(ngModel)]="selectedColumn"
+                (ngModelChange)="changeColumn($event)"
                 *ngIf="isLoaded">
-            <option>--- Select user ---</option>
-            <option>All users</option>
-            <option *ngFor="let u of users$ | async" [ngValue]="u">{{u}}</option>
+            <option>--- Select column ---</option>
+            <option>All</option>
+            <option *ngFor="let col of cols" [ngValue]="col">{{col.name}}</option>
         </select>
     </div>
 
     <div class="utls-logfilter-column">
         <div class="utls-selector-text utls-text">
-            Category:
+            Specify columnvalue:
         </div>
 
-        <select class="form-control utls-select"
-                [(ngModel)]="selectedCategory"
-                (ngModelChange)="changeCategory($event)"
+        <select class="form-control utls-select"value
+                [(ngModel)]="selectedContent"
+                (ngModelChange)="changeLogContent($event)"
                 *ngIf="isLoaded">
-            <option>--- Select category ---</option>
-            <option>All categories</option>
-            <option *ngFor="let c of categories$ | async | stringSort" [ngValue]="c">{{c}}</option>
+            <option>--- Select ---</option>
+            <option>All</option>
+            <option *ngFor="let con of columnContent | dtoSort" [ngValue]="con">{{con.value}}</option>
         </select>
+
+
+
     </div>
+
+
 </div>
 
 <div hidden>{{clock | async}}</div>
@@ -59,7 +65,10 @@
                 <mfDefaultSorter by="target">Using device</mfDefaultSorter>
             </th>
             <th class="utls-column-small">
-                <mfDefaultSorter by="target">Category</mfDefaultSorter>
+                <mfDefaultSorter by="category">Category</mfDefaultSorter>
+            </th>
+            <th class="utls-column-xsmall">
+                <mfDefaultSorter by="name">Eventname</mfDefaultSorter>
             </th>
             <th class="utls-column-xsmall">
                 <mfDefaultSorter by="host">Robot</mfDefaultSorter>
@@ -76,6 +85,7 @@
             <td>{{log.tab}}</td>
             <td>{{log.target}}</td>
             <td>{{log.category}}</td>
+            <td>{{log.name}}</td>
             <td>{{log.host}}</td>
             <td>{{log.label}}</td>
         </tr>

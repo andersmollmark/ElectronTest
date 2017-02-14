@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {UtlsFileService} from "./utls-file.service";
-import {JsonDumpService} from "./jsonDump.service";
 import {remote, ipcRenderer} from "electron";
 import {UtlsLog} from "./log";
 import {Observable} from "rxjs/Observable";
+import {Dto} from "./dto";
 
 let {dialog} = remote;
 
@@ -13,9 +13,6 @@ let {dialog} = remote;
     templateUrl: './app/app.component.html'
 })
 export class AppComponent implements OnInit {
-
-    items;
-    text: string;
     logs$: Observable<UtlsLog[]>;
     public filterQuery = "";
     clock;
@@ -23,17 +20,23 @@ export class AppComponent implements OnInit {
     public sortBy = "timestampAsDate";
     public sortOrder = "asc";
 
-    // Select-user-filter
-    selectUserDefaultChoice = "--- Select user ---";
-    public selectedUser = this.selectUserDefaultChoice;
-    allUsers = "All users";
-    users$: Observable<String[]>;
+    //Select-column-filter
+    selectedColumnDefaultChoice = "--- Select column ---";
+    public selectedColumn = this.selectedColumnDefaultChoice;
+    allColumns = "All";
+    cols = [
+        {name: "Username", value: UtlsFileService.USERNAME},
+        {name: "Active tab", value: UtlsFileService.TAB},
+        {name: "Category", value: UtlsFileService.CATEGORY},
+        {name: "Eventname", value: UtlsFileService.EVENTNAME}
+    ];
 
-    //Select-category-filter
-    selectCategoryDefaultChoice = "--- Select category ---";
-    public selectedCategory = this.selectCategoryDefaultChoice;
-    allCategories = "All categories";
-    categories$: Observable<String[]>;
+    //Selected-column-filter
+    selectedContentDefaultChoice = "--- Select ---";
+    public selectedContent = this.selectedContentDefaultChoice;
+    allContent = "All";
+    columnContent: Dto[];
+
 
     constructor(private utlsFileService: UtlsFileService) {
         this.isLoaded = false;
@@ -66,30 +69,30 @@ export class AppComponent implements OnInit {
             console.log("filename selected:" + fileNamesArr[0]);
             this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
             this.isLoaded = true;
-            this.users$ = this.utlsFileService.getUsers();
-            this.categories$ = this.utlsFileService.getCategories();
         }
     }
 
-    changeUser(newUser){
-        if(this.allUsers !== newUser && this.selectUserDefaultChoice !== newUser){
-            this.logs$ = this.utlsFileService.getWithSpecificUser(newUser);
+    changeColumn(newColumn) {
+        this.selectedColumn = newColumn;
+        if (this.allColumns !== newColumn && this.selectedColumnDefaultChoice !== newColumn) {
+            this.columnContent = this.utlsFileService.getContentForSpecificColumn(newColumn);
+            this.selectedContent = this.selectedContentDefaultChoice;
         }
-        if(this.allUsers === newUser){
+        if (this.allColumns === newColumn) {
+            let emptyContent = new Array<Dto>();
+            this.columnContent = emptyContent;
             this.logs$ = this.utlsFileService.getAllLogs();
         }
     }
 
-    changeCategory(newCategory){
-        if(this.allCategories !== newCategory && this.selectCategoryDefaultChoice !== newCategory){
-            this.logs$ = this.utlsFileService.getWithSpecificCategory(newCategory);
+    changeLogContent(newValueFromSpecificColumn) {
+        if (this.allContent !== newValueFromSpecificColumn && this.selectedContentDefaultChoice !== newValueFromSpecificColumn) {
+            this.logs$ = this.utlsFileService.getLogsForSpecificColumnValue(newValueFromSpecificColumn);
         }
-        if(this.allCategories === newCategory){
+        if (this.allContent === newValueFromSpecificColumn) {
             this.logs$ = this.utlsFileService.getAllLogs();
         }
-        alert("hi " + newCategory);
     }
-
 
 
     ngOnDestroy() {

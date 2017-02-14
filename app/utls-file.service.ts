@@ -27,6 +27,7 @@ export class UtlsFileService {
     }
 
     createLogs(filename: string): Observable<UtlsLog[]> {
+        this.init();
         this.activeLogContent =
             this.http.get(filename).map(res => res.json())
                 .catch(error => Observable.throw(error.json ? error.json().error : alert("Error when reading file:" + filename + "," + error) || 'Server error'));
@@ -38,6 +39,16 @@ export class UtlsFileService {
         );
 
         return this.activeLogContent;
+    }
+
+    private init(){
+        if(this.usersInLogContent && this.usersInLogContent.length > 0){
+            this.usersInLogContent = [];
+            this.categoriesInLogContent = [];
+            this.tabsInLogContent = [];
+            this.eventNamesInLogContent = [];
+            this.activeLogContent = Observable.of([]);
+        }
     }
 
     mapLogToContentAndColumn(logs: UtlsLog[]){

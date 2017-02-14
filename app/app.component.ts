@@ -67,6 +67,8 @@ export class AppComponent implements OnInit {
         }
         else {
             console.log("filename selected:" + fileNamesArr[0]);
+            this.selectedColumn = this.selectedColumnDefaultChoice;
+            this.selectedContent = this.selectedContentDefaultChoice;
             this.logs$ = this.utlsFileService.createLogs(fileNamesArr[0]);
             this.isLoaded = true;
         }
